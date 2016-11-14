@@ -1,0 +1,27 @@
+{
+  "name": "flow-ace",
+  "version": "0.1.0",
+  "description": "Ace editor wrapper for Flow",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danandrei/flow-ace.git"
+  },
+  "keywords": [
+    "flow",
+    "ace",
+    "jillix"
+  ],
+  "author": "danandrei",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/danandrei/flow-ace/issues"
+  },
+  "homepage": "https://github.com/danandrei/flow-ace#readme",
+  "dependencies": {
+    "brace": "^0.9.0"
+  }
+}
