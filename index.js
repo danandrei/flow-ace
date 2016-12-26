@@ -7,30 +7,28 @@ require('brace/theme/solarized_dark');
 
 /*
  *
- * initialize ace editor instance
+ * initialize ace editor
  * @name init
  *
  */
-exports.init = (scope, inst, args, data, next) => {
+exports.init = (scope, state, args, data, next) => {
     let selector = args.selector || '.editor';
 
     // setup editor
-    inst.options = args.options || {};
-    let container = document.querySelectorAll(selector);
-    inst.editor = ace.edit(container[0]);
-    inst.editor.setOptions(inst.options);
+    state.options = args.options || {};
+    state.editor = ace.edit(document.querySelector(selector));
+    state.editor.setOptions(state.options);
 
-    inst.editor.setShowPrintMargin(false);
-    inst.editor.getSession().setMode('ace/mode/json');
+    state.editor.setShowPrintMargin(false);
+    state.editor.getSession().setMode('ace/mode/json');
 
     // hardcoded theme
-    //inst.editor.setTheme('ace/theme/solarized_dark');
+    //state.editor.setTheme('ace/theme/solarized_dark');
 
     // listen for events
     let events = args.events || [];
     events.forEach(eventName => {
-
-        inst.editor.on(eventName, event => {
+        state.editor.on(eventName, event => {
             // TODO
         });
     });
@@ -38,9 +36,9 @@ exports.init = (scope, inst, args, data, next) => {
     next(null, data);
 };
 
-exports.set = (scope, inst, args, data, next) => {
+exports.set = (scope, state, args, data, next) => {
 
-    if (!inst.editor) {
+    if (!state.editor) {
         return next(new Error('Flow-ace.set: Editor not found.'));
     }
 
@@ -50,31 +48,31 @@ exports.set = (scope, inst, args, data, next) => {
         return next(new Error('Flow-ace.set: No data to set.'));
     }
 
-    inst.editor.setValue(content, 1);
+    state.editor.setValue(content, 1);
 
     next(null, data);
 };
 
-exports.setOptions = (scope, inst, args, data, next) => {
+exports.setOptions = (scope, state, args, data, next) => {
 
-    if (!inst.editor) {
+    if (!state.editor) {
         return next(new Error('Flow-ace.set: Editor not found.'));
     }
 
-    let options = data.options || args.options || inst.options;
-    inst.options = options;
-    inst.editor.setOptions(inst.options);
+    let options = data.options || args.options || state.options;
+    state.options = options;
+    state.editor.setOptions(state.options);
 
     next(null, data);
 };
 
-exports.get = (scope, inst, args, data, next) => {
+exports.get = (scope, state, args, data, next) => {
 
-    if (!inst.editor) {
+    if (!state.editor) {
         return next(new Error('Flow-ace.set: Editor not found.'));
     }
 
-    let content = inst.editor.getValue();
+    let content = state.editor.getValue();
     data.content = content
     next(null, data);
 };
