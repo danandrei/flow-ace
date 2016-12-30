@@ -48,10 +48,10 @@ exports.set = (scope, state, args, data, next) => {
         return next(new Error('Flow-ace.set: Editor not found.'));
     }
 
-    let content = libob.path.get(args, data);
+    let content = typeof args === 'string' ? libob.path.get(args, data) : "";
 
-    if (!content) {
-        return next(new Error('Flow-ace.set: No data to set.'));
+    if (typeof content !== 'string') {
+        return next(new Error('Flow-ace.set: Cannot set non string data.'));
     }
 
     state.editor.setValue(content, 1);
