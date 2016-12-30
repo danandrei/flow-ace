@@ -2,6 +2,7 @@
 
 // Dependencies
 const ace = require('brace');
+const libob = require('libobject');
 require('brace/mode/json');
 require('brace/theme/solarized_dark');
 
@@ -36,13 +37,18 @@ exports.init = (scope, state, args, data, next) => {
     next(null, data);
 };
 
+/*Data: {
+    needs: {
+        content: "string"
+    }
+}*/
 exports.set = (scope, state, args, data, next) => {
 
     if (!state.editor) {
         return next(new Error('Flow-ace.set: Editor not found.'));
     }
 
-    let content = data.content;
+    let content = libob.path.get(args, data);
 
     if (!content) {
         return next(new Error('Flow-ace.set: No data to set.'));
@@ -72,7 +78,6 @@ exports.get = (scope, state, args, data, next) => {
         return next(new Error('Flow-ace.set: Editor not found.'));
     }
 
-    let content = state.editor.getValue();
-    data.content = content
+    libob.path.set(args, data, state.editor.getValue());
     next(null, data);
 };
