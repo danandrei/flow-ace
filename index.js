@@ -2,82 +2,54 @@
 
 // Dependencies
 const ace = require('brace');
-const libob = require('libobject');
 require('brace/mode/json');
 require('brace/theme/solarized_dark');
 
-/*
- *
- * initialize ace editor
- * @name init
- *
- */
-exports.init = (scope, state, args, data, next) => {
+
+function Ace (args) {
+    let args = args || {};
     let selector = args.selector || '.editor';
 
     // setup editor
-    state.options = args.options || {};
-    state.editor = ace.edit(document.querySelector(selector));
-    state.editor.setOptions(state.options);
+    this.options = args.options || {};
+    this.editor = ace.edit(document.querySelector(selector));
+    this.editor.setOptions(this.options);
 
-    state.editor.setShowPrintMargin(false);
-    state.editor.getSession().setMode('ace/mode/json');
+    this.editor.setShowPrintMargin(false);
+    this.editor.getSession().setMode('ace/mode/json');
+}
 
-    // hardcoded theme
-    //state.editor.setTheme('ace/theme/solarized_dark');
+Ace.prototype.set = function (value) {
 
-    // listen for events
-    let events = args.events || [];
-    events.forEach(eventName => {
-        state.editor.on(eventName, event => {
-            // TODO
-        });
-    });
+    if (typeof value !== 'string') {
+        value = '';
+    }
 
-    next(null, data);
+    if (!this.editor) {
+        return;
+    }
+
+    this.editor.setValue(value, 1);
 };
 
-/*Data: {
-    needs: {
-        content: "string"
-    }
-}*/
-exports.set = (scope, state, args, data, next) => {
+Ace.prototype.setOptions = function (options) {
+    options = options || {};
 
-    if (!state.editor) {
-        return next(new Error('Flow-ace.set: Editor not found.'));
+    if (!this.editor) {
+        return;
     }
 
-    let content = typeof args === 'string' ? libob.path.get(args, data) : "";
-
-    if (typeof content !== 'string') {
-        return next(new Error('Flow-ace.set: Cannot set non string data.'));
-    }
-
-    state.editor.setValue(content, 1);
-
-    next(null, data);
+    this.options = options;
+    this.editor.setOptions(options);
 };
 
-exports.setOptions = (scope, state, args, data, next) => {
+Ace.prototype.get = function () {
 
-    if (!state.editor) {
-        return next(new Error('Flow-ace.set: Editor not found.'));
+    if (!this.editor) {
+        return;
     }
 
-    let options = data.options || args.options || state.options;
-    state.options = options;
-    state.editor.setOptions(state.options);
-
-    next(null, data);
+    return this.editor.getValue();
 };
 
-exports.get = (scope, state, args, data, next) => {
-
-    if (!state.editor) {
-        return next(new Error('Flow-ace.set: Editor not found.'));
-    }
-
-    libob.path.set(args, data, state.editor.getValue());
-    next(null, data);
-};
+module.exports = Ace;
