@@ -7,7 +7,7 @@ require('brace/theme/solarized_dark');
 
 
 function Ace (args) {
-    let args = args || {};
+    args = args || {};
     let selector = args.selector || '.editor';
 
     // setup editor
